@@ -1,7 +1,7 @@
-extension Collection where Self.Element: Hashable,
-                        Self.Indices.Element == Int {
+public extension Collection where Self.Element: Hashable,
+                            Self.Indices.Element == Int {
     
-    func search(_ pattern: Self) -> Range<Int>? {
+    public func search(_ pattern: Self) -> Range<Int>? {
         guard pattern.underestimatedCount > 0 else { return nil }
         
         var skipTable: [Self.Element: Int] = [:]
@@ -54,8 +54,8 @@ extension Collection where Self.Element: Hashable,
 
 }
 
-extension String {
-    func search(_ pattern: String) -> Range<Int>? {
+public extension String {
+    public func search(_ pattern: String) -> Range<Int>? {
         let pat = pattern.unicodeScalars.map { Int($0.value) }
         return self.unicodeScalars.map { Int($0.value) }.search(pat)
     }

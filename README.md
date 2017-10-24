@@ -1,6 +1,6 @@
 # BoyerMoore
 
-This package contains a very general implementation of the Boyer Moore algorithm.
+This package contains a very general implementation of the [Boyer-Moore algorithm](https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm).
 
 It does so by extending the Collection protocol.
 

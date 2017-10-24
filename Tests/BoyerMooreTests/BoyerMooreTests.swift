@@ -41,7 +41,7 @@ class BoyerMooreTests: XCTestCase {
                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
-
+        
         let sample4 = Array(input2[30...32])
         let result4 = input2.search(sample4)
         XCTAssertNotNil(result4)
@@ -76,6 +76,7 @@ class BoyerMooreTests: XCTestCase {
         let wtfApple = input.characters.enumerated().map { $0.element }[result!]
         let grab = String(wtfApple)
         XCTAssertEqual("truth", grab)
+        
     }
 
 

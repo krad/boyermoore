@@ -78,7 +78,25 @@ class BoyerMooreTests: XCTestCase {
         XCTAssertEqual("truth", grab)
         
     }
+    
+    func test_that_we_can_iterate_over_every_instance_of_a_pattern() {        
+        let input: [UInt8] = [0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
+                              0, 0, 7, 0, 0, 0, 0, 0, 0, 0,]
 
+        var cnt = 0
+        for range in input.searchAll([0, 0, 7]) {
+            XCTAssertEqual(range.lowerBound, (cnt * 10))
+            XCTAssertEqual(range.upperBound, (cnt * 10) + 3)
+            cnt += 1
+        }
+        XCTAssertEqual(cnt, 7)
+
+    }
 
     static var allTests = [
         ("test_that_we_can_find_a_some_numbers", test_that_we_can_find_a_some_numbers),

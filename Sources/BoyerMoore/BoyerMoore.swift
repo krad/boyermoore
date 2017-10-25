@@ -1,8 +1,35 @@
+public struct BoyerMooreIterator<Base: Collection>: Sequence, IteratorProtocol where Base.Element: Hashable, Base.Indices.Element == Int {
+
+    let collection: Base
+    let pattern: Base
+    var currentIdx: Int
+    
+    mutating public func next() -> Range<Int>? {
+        if let result = self.collection.search(self.pattern, startingAt: currentIdx) {
+            currentIdx = result.upperBound + 1
+            return result
+        }
+        
+        return nil
+    }
+    
+}
+
 public extension Collection where Self.Element: Hashable,
                             Self.Indices.Element == Int {
     
+    public func searchAll(_ pattern: Self) -> BoyerMooreIterator<Self> {
+        return BoyerMooreIterator(collection: self,
+                                  pattern: pattern,
+                                  currentIdx: pattern.underestimatedCount - 1)
+    }
+    
     public func search(_ pattern: Self) -> Range<Int>? {
-        guard pattern.underestimatedCount > 0 else { return nil }
+        return self.search(pattern, startingAt: pattern.underestimatedCount - 1)
+    }
+    
+    internal func search(_ pattern: Self, startingAt: Int) -> Range<Int>? {
+        guard pattern.underestimatedCount > 0, startingAt < self.underestimatedCount else { return nil }
         
         var skipTable: [Self.Element: Int] = [:]
         for (i, c) in pattern.enumerated() {
@@ -13,7 +40,7 @@ public extension Collection where Self.Element: Hashable,
         let patternIndices = pattern.indices.reversed()
         var rangeStart     = 0
         
-        var idx = pattern.underestimatedCount - 1
+        var idx = startingAt
         while idx < self.count {
             // Loop over the reverse pattern index
             for p in patternIndices {
@@ -21,7 +48,7 @@ public extension Collection where Self.Element: Hashable,
                 let currentIdx     = idx - rangeStart
                 let currentValue   = self[currentIdx]
                 let currentPattern = pattern[p]
-
+                
                 // Check if we have a match
                 if currentValue == currentPattern {
                     
@@ -35,7 +62,7 @@ public extension Collection where Self.Element: Hashable,
                     rangeStart += 1
                     
                 } else {
-
+                    
                     if let shift = skipTable[currentValue] {
                         idx += shift
                     } else {

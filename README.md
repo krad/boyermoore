@@ -4,6 +4,8 @@ This package contains a very general implementation of the [Boyer-Moore algorith
 
 It does so by extending the Collection protocol.
 
+An extension for String is also included that allows for string searching.
+
 ## Usage
 
 Currently this package supports types that implement the Collection protocol where
@@ -11,6 +13,11 @@ the Element is Hashable and the subscript Index is of type Int
 
 Call `search(_ pattern: T)` on the collection and a `Range` gets returned for
 the first occurrence of the pattern.
+
+Call `searchAll(_ pattern: T)` on a collection and an Iterator gets returned that
+can be used to find every occurrence of the pattern.
+
+## Examples
 
 ### String search
 ```
@@ -33,7 +40,7 @@ let input: [UInt8] =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]
 
-let result = input.search([7, 7, 7]) #=> Range(30..<33)
+let result = input.search([7, 7, 7]) // #=> Range(30..<33)
 
 ```
 

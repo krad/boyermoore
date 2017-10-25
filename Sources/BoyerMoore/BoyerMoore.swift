@@ -82,8 +82,15 @@ public extension Collection where Self.Element: Hashable,
 }
 
 public extension String {
+    
     public func search(_ pattern: String) -> Range<Int>? {
         let pat = pattern.unicodeScalars.map { Int($0.value) }
         return self.unicodeScalars.map { Int($0.value) }.search(pat)
+    }
+    
+    public func searchAll(_ pattern: String) -> BoyerMooreIterator<[Int]> {
+        let pat = pattern.unicodeScalars.map { Int($0.value) }
+        let col = self.unicodeScalars.map { Int($0.value) }
+        return BoyerMooreIterator(collection: col, pattern: pat, currentIdx: pat.underestimatedCount - 1)
     }
 }

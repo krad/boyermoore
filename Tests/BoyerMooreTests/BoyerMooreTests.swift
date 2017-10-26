@@ -80,6 +80,7 @@ class BoyerMooreTests: XCTestCase {
     }
     
     func test_that_we_can_iterate_over_every_instance_of_a_pattern() {
+        
         let input: [UInt8] = [0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
                               0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
                               0, 0, 7, 0, 0, 0, 0, 0, 0, 0,
@@ -95,6 +96,25 @@ class BoyerMooreTests: XCTestCase {
             cnt += 1
         }
         XCTAssertEqual(cnt, 7)
+        
+        /// We had a failing test for the other iterator so I'm putting this here to ensure I'm not insane.
+        let input2: [UInt8] = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,]
+        
+        cnt = 0
+        for range in input2.searchAll([0, 0]) {
+            XCTAssertEqual(range.lowerBound, (cnt * 10))
+            XCTAssertEqual(range.upperBound, (cnt * 10) + 2)
+            cnt += 1
+        }
+        XCTAssertEqual(cnt, 7)
+
+
     }
     
     func test_that_we_can_iterate_over_every_instance_of_a_pattern_in_a_string() {
@@ -107,11 +127,41 @@ class BoyerMooreTests: XCTestCase {
         XCTAssertEqual(cnt, 5)
         
     }
+    
+    func test_that_we_can_iterate_over_chunks_delimited_by_a_patter() {
+
+        let input: [UInt8] = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                              0, 0, 1, 1, 1, 1, 1, 1, 1, 1,]
+
+        var cnt = 0
+        for chunk in input.chunk(with: [0, 0]) {
+            XCTAssertEqual(chunk, [1, 1, 1, 1, 1, 1, 1, 1])
+            cnt += 1
+        }
+        XCTAssertEqual(cnt, 7)
+        
+        
+        cnt = 0
+        for chunk in input.chunk(with: [0, 0], includeSeperator: true) {
+            XCTAssertEqual(chunk, [0, 0, 1, 1, 1, 1, 1, 1, 1, 1])
+            cnt += 1
+        }
+        XCTAssertEqual(cnt, 7)
+
+    }
 
     static var allTests = [
         ("test_that_we_can_find_a_some_numbers", test_that_we_can_find_a_some_numbers),
         ("test_that_we_can_find_structs", test_that_we_can_find_structs),
         ("test_that_we_can_find_a_string", test_that_we_can_find_a_string),
+        ("test_that_we_can_iterate_over_every_instance_of_a_pattern", test_that_we_can_iterate_over_every_instance_of_a_pattern),
+        ("test_that_we_can_iterate_over_every_instance_of_a_pattern_in_a_string", test_that_we_can_iterate_over_every_instance_of_a_pattern_in_a_string),
+        ("test_that_we_can_iterate_over_chunks_delimited_by_a_patter", test_that_we_can_iterate_over_chunks_delimited_by_a_patter),
     ]
 }
 

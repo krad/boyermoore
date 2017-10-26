@@ -17,6 +17,10 @@ the first occurrence of the pattern.
 Call `searchAll(_ pattern: T)` on a collection and an Iterator gets returned that
 can be used to find every occurrence of the pattern.
 
+Call `chunk(_ pattern: T, includeSeperator: Bool)` on a collection and an Iterator gets
+returned that can be used to split the collection by the pattern.  By default it
+will *NOT* include the delimiter in the output
+
 ## Examples
 
 ### String search
@@ -66,6 +70,45 @@ for range in input.searchAll([0, 0, 7]) {
 // #=> 40..<43
 // #=> 50..<53
 // #=> 60..<63
+
+```
+
+### Splitting input using a pattern
+
+```
+/// Do NOT include delimiter
+let input: [UInt8] = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+                      0, 0, 1, 1, 1, 1, 1, 1, 1, 1,]
+
+for chunk in input.chunk(with: [0, 0]) {
+  print(chunk)
+}
+
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [1, 1, 1, 1, 1, 1, 1, 1]
+
+// Include the delimter
+for chunk in input.chunk(with: [0, 0], includeSeperator: true) {
+  print(chunk)
+}
+
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+// #=> [0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
 
 ```
 

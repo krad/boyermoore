@@ -1,4 +1,4 @@
-# BoyerMoore
+# BoyerMoore [![Build Status](https://travis-ci.org/krad/boyermoore.svg?branch=master)](https://travis-ci.org/krad/boyermoore)
 
 This package contains a very general implementation of the [Boyer-Moore algorithm](https://en.wikipedia.org/wiki/Boyer%E2%80%93Moore_string_search_algorithm).
 

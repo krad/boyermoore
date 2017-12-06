@@ -142,37 +142,34 @@ public struct BoyerMooreChunkedIterator<Base: Collection>: Sequence, IteratorPro
     var currentIdx: Int
     let includeSeperator: Bool
     
-    var lastRange: Range<Int>? = nil
+    private var lastEndRange: Range<Int>?
+    private var ranges: [Range<Int>]
     
     init(collection: Base, pattern: Base, currentIdx: Int, includeSeperator: Bool) {
         self.collection       = collection
         self.pattern          = pattern
         self.currentIdx       = currentIdx
         self.includeSeperator = includeSeperator
+        self.ranges           = self.collection.searchAll(self.pattern).flatMap { $0 }
     }
     
     mutating public func next() -> Base.SubSequence? {
-        if let currentRange = self.collection.search(self.pattern, startingAt: currentIdx) {
-
-            var result: Base.SubSequence?
-            if let prevRange = self.lastRange {
-                result = makeSubSequence(with: prevRange, and: currentRange)
+        
+        if self.ranges.count > 0 {
+            let startRange = self.ranges.removeFirst()
+            if let nextRange = self.ranges.first {
+                return self.collection[startRange.lowerBound..<nextRange.lowerBound]
             } else {
-
-                // This is our first time through
-                if let nextRange = self.collection.search(self.pattern, startingAt: currentIdx + currentRange.upperBound) {
-                    result = makeSubSequence(with: currentRange, and: nextRange)
-                }
+                return self.collection[startRange.lowerBound..<self.collection.underestimatedCount]
             }
-
-            self.lastRange = currentRange
-            currentIdx = currentRange.upperBound + 1
-            return result
         }
+        
         return nil
     }
     
-    private func makeSubSequence(with startRange: Range<Int>, and endRange: Range<Int>) -> Base.SubSequence {
+    private func makeSubSequence(with startRange: Range<Int>,
+                                 and endRange: Range<Int>) -> Base.SubSequence
+    {
         let startIdx = self.includeSeperator ? startRange.lowerBound : startRange.upperBound
         return self.collection[startIdx..<endRange.lowerBound]
     }

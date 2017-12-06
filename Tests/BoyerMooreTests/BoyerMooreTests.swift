@@ -128,7 +128,7 @@ class BoyerMooreTests: XCTestCase {
         
     }
     
-    func test_that_we_can_iterate_over_chunks_delimited_by_a_patter() {
+    func test_that_we_can_iterate_over_chunks_delimited_by_a_pattern() {
 
         let input: [UInt8] = [0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
                               0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -154,6 +154,34 @@ class BoyerMooreTests: XCTestCase {
         XCTAssertEqual(cnt, 7)
 
     }
+    
+    func test_that_we_retain_index_information_when_chunking() {
+        
+        let input: [UInt8] = [0x0, 0x0, 0x0, 0x1, 99, 99, 99, 99,
+                              0x0, 0x0, 0x0, 0x1, 88, 88, 88, 88,
+                              0x0, 0x0, 0x0, 0x1, 77, 77, 77, 77]
+        
+        var cnt = 0
+        for chunk in input.chunk(with: [0x0, 0x0, 0x0, 0x1], includeSeperator: true) {
+            if cnt == 0 {
+                XCTAssertEqual(chunk.startIndex, 0)
+                XCTAssertEqual(chunk.endIndex, 8)
+            }
+            
+            if cnt == 1 {
+                XCTAssertEqual(chunk.startIndex, 8)
+                XCTAssertEqual(chunk.endIndex, 16)
+            }
+            
+            if cnt == 2 {
+                XCTAssertEqual(chunk.startIndex, 16)
+                XCTAssertEqual(chunk.endIndex, 24)
+            }
+            
+            cnt += 1
+        }
+        XCTAssertEqual(cnt, 3)
+    }
 
     static var allTests = [
         ("test_that_we_can_find_a_some_numbers", test_that_we_can_find_a_some_numbers),
@@ -161,7 +189,7 @@ class BoyerMooreTests: XCTestCase {
         ("test_that_we_can_find_a_string", test_that_we_can_find_a_string),
         ("test_that_we_can_iterate_over_every_instance_of_a_pattern", test_that_we_can_iterate_over_every_instance_of_a_pattern),
         ("test_that_we_can_iterate_over_every_instance_of_a_pattern_in_a_string", test_that_we_can_iterate_over_every_instance_of_a_pattern_in_a_string),
-        ("test_that_we_can_iterate_over_chunks_delimited_by_a_patter", test_that_we_can_iterate_over_chunks_delimited_by_a_patter),
+        ("test_that_we_can_iterate_over_chunks_delimited_by_a_patter", test_that_we_can_iterate_over_chunks_delimited_by_a_pattern),
     ]
 }
 
